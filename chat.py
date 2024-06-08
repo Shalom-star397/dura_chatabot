@@ -4,8 +4,10 @@ import json
 import torch
 from model import NeuralNet
 from nltk_utils import bag_of_words, tokenize
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 # Load the chatbot model
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -33,7 +35,6 @@ bot_name = "Duramazwi"
 def chat():
     data = request.get_json()
     sentence = data['message']
-    print('tdiiii: ', sentence)
     sentence = tokenize(sentence)
     X = bag_of_words(sentence, all_words)
     X = X.reshape(1, X.shape[0])
@@ -55,3 +56,5 @@ def chat():
     else:
         return jsonify({'response': "Hazvisi kunzwisisika, Zama kunyora zvekare...!"})
 
+if __name__ == '__main__':
+    app.run(debug=False)
